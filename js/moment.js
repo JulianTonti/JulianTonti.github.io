@@ -4,7 +4,7 @@
     module.exports = t();
   }
   else {
-    if ("function" == typeof define && define.amd)
+    if ("function" == typeof define && define.amd) {
       define(t);
     }
     else {

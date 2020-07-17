@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='markdown.css'>
+  <script src=''></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script type="module">
+    document.querySelectorAll(".markdown-body").forEach(v => v.innerHTML = marked(v.innerHTML));
+  </script>
+</head><body class='markdown-body'>
+
+# How to use Ubuntu + WSL2 + Windows 10 
+
+Based on [Microsoft instructions (2020-12-05)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+
+**1. Powershell (as administrator):**
+```
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+Restart-Computer
+```
+
+**2. Download, install and launch Ubuntu from the Windows Store:** 
+
+[https://www.microsoft.com/en-au/p/ubuntu/9nblggh4msv6]()
+
+**3. On first launch, enter new account details.**
+
+![](img_create.png)
+
+**4. In Ubuntu shell, update OS and install utilities.**
+```
+# system update
+sudo apt update
+
+# utilities
+sudo apt install -y --fix-missing \
+  sudo \
+  zsh \
+  nano \
+  emacs \
+  vim \
+  inetutils-ping \
+  net-tools \
+  openssh-server \
+  curl \
+  wget \
+  ca-certificates \
+  git \
+  expect \
+  pass \
+;
+ 
+# programming languages and databases
+sudo apt install -y --fix-missing \
+  nodejs \
+  npm \
+  python2.7 \
+  python3 \
+  jupyter \
+  r-base \
+  golang \
+  sqlite3 \
+  mysql-server \
+  mysql-client \
+  postgresql \
+  postgresql-contrib \
+  postgresql-client \
+  postgis \
+;
+ 
+# x2go for remote desktop (requires SSH): https://wiki.x2go.org/doku.php/doc:newtox2go
+sudo apt install -y --fix-missing \
+  x2goserver \
+  x2goserver-xsession \
+;
+
+# IMPORTANT: ignore /mnt or mlocate may take days to build it's DB as it will index windows
+sudo nano /etc/updatedb.conf
+  add /mnt to PRUNEPATHS
+
+# optional GUI (using xubuntu here, but you could use gnome, kde, mate, etc, instead)
+# NOTE: select lightdm (not gdm3) when prompted as lightdm is preferred for xubuntu
+sudo apt install xubuntu-desktop
+
+# upgrade then exit
+sudo apt upgrade
+exit
+```
+
+**5. Back in Powershell, set WSL2 and Ubuntu to be default**
+```
+wsl --list --verbose
+wsl --set-default-version 2
+wsl --set-version Ubuntu 2
+wsl --set-default Ubuntu
+wsl --list --verbose
+
+# go to your home directory in WINDOWS
+cd $HOME
+
+# start wsl from here
+wsl
+```
+
+**6. Set up SSH**
+```
+# in WSL, you should now be in your WINDOWS home directory (not linux home directory)
+pwd
+mkdir -p .ssh
+cd .ssh
+
+# create a keypair in your WINDOWS .ssh directory 
+ssh-keygen -N "your_passphrase" -f ubuntu
+
+# add the public key to your LINUX ssh authorized keys
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+cat ubuntu.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+# disable password logins (require ssh key)
+sudo nano /etc/ssh/sshd_config
+  PasswordAuthentication no
+  PermitEmptyPasswords no
+  ChallengeResponseAuthentication no
+  UsePAM no
+  ctrl-x y
+
+# (re)start the SSH server
+sudo service ssh restart
+service ssh status
+
+# take note of your eth0 inet address
+ifconfig
+
+```
+
+**7. Install x2go windows client:**
+
+[https://wiki.x2go.org/doku.php/doc:installation:x2goclient](https://wiki.x2go.org/doku.php/doc:installation:x2goclient)
+
+
+**8. Open x2go, create a new session, save it, then log in (use your wsl inet address)** 
+
+![x2go settings](img_x2go.png)
+
+
+</body>
+</html>
