@@ -1,8 +1,17 @@
-<html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-    content
-  </body>
-</html>
+<script type="module" src="https://julians.page/js/lazy_page.js"></script>
+<title>Lazy Page</title>
+<style>body{visibility:hidden;}</style>
+# Using GitHub Pages without Jekyll
+
+You can use GitHub Pages to host websites. Read about it here: [](https://pages.github.com/). By default, Jekyll will be enabled and GitHub will process your content automatically when you push to the repo. That's fine, but maybe you want to control your own build process.
+
+## Create a site without Jekyll
+* using your GitHub username, create a repo called `<username>.github.io`
+* add an empty file to the repo root named `.nojekyll`. This will disable GitHub's automatic Jekyll processing and put you in control of your build process (if you even have one).
+* add an `index.html` to the repo then visit `<username>.github.io` to see it.
+
+## Using a custom domain
+* visit your custom domain provider setup a CNAME to point at your github address
+* create a file named `CNAME` in the root of your repo. It should contain your custom domain.
+* visit your custom domain in a browser and it should forward to your GitHub Pages site
+
