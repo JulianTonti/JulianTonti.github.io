@@ -1,17 +1,21 @@
 <script type="module" src="https://julians.page/js/lazy_page.js"></script>
-<title>Lazy Page</title>
-<style>body{visibility:hidden;}</style>
+
 # Using GitHub Pages without Jekyll
 
-You can use GitHub Pages to host websites. Read about it here: [https://pages.github.com/](https://pages.github.com/). By default, Jekyll will be enabled and GitHub will process your content automatically when you push to the repo. That's fine, but maybe you want to control your own build process.
+When you use [GitHub Pages] to host a website, [Jekyll] will be enabled by default and GitHub will run a build pipeline automatically when you push to the site's repo. That's fine, but maybe you want to control your own build process (or not use one at all).
 
 ## Create a site without Jekyll
 * using your GitHub username, create a repo called `<username>.github.io`
-* add an empty file to the repo root named `.nojekyll`. This will disable GitHub's automatic Jekyll processing and put you in control of your build process (if you even have one).
-* add an `index.html` to the repo then visit `<username>.github.io` to see it.
+* add an empty file to the repo root named `.nojekyll`. This will disable GitHub's automatic Jekyll processing.
+* add your site content then visit `<username>.github.io` to see it.
 
 ## Using a custom domain
-* visit your custom domain provider setup a CNAME to point at your github address
-* create a file named `CNAME` in the root of your repo. It should contain your custom domain.
-* visit your custom domain in a browser and it should forward to your GitHub Pages site
+* go to your custom domain provider and create a CNAME record that points at `<username>.github.io`.
+* add a text file named `CNAME` to the root of your site's repo. The file should contain your custom domain.
+* go to your site's repo at GitHub, then `Settings &rarr; GitHub Pages &rarr; Enforce HTTPS` and ensure that it is ticked.
+* visit your custom domain and it should forward to your GitHub site (it may not be immediate).
+
+[GitHub Pages]: https://pages.github.com/
+[Jekyll]: https://jekyllrb.com/
+
 
