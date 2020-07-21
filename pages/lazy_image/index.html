@@ -1,0 +1,68 @@
+<script src="https://julians.page/js/lazy_page.js"></script>
+<script>
+  function onpaste(event) {
+    let file = (event.clipboardData || window.clipboardData).files[0];
+    convert_file(file);
+  }
+  function ondrop(event) {
+    event.preventDefault(); // prevents file being opened
+    let file = null;
+    if (event.dataTransfer.items) {
+      if (event.dataTransfer.items[0].kind === 'file') {
+        file = event.dataTransfer.items[0].getAsFile();
+      }
+    }
+    else {
+      file = event.dataTransfer.files[0];
+    }
+    convert_file(file);
+  }
+  function convert_file(file) {
+    if (!file || file.type.substr(0,6) != "image/") {
+      let msg = "This only works with images. You pasted something else";
+      document.querySelector('#img1').innerHTML = msg;
+      document.querySelector('#img2').src = '';
+      console.error(msg);
+      return;
+    }
+    let reader = new FileReader();
+    reader.onloadend = function() {
+      let src = reader.result;
+      navigator.clipboard.writeText(`<img src="${src}" />`);
+      document.querySelector('#img1').innerHTML = `&lt;img src="${src}" /&gt;`;
+      document.querySelector('#img2').src = src;
+      console.log(`<img src="${src}" />`);
+    }
+    reader.readAsDataURL(file);
+  }
+  window.onload = function() {
+    document.body.addEventListener("dragover", e => e.preventDefault());
+    document.body.addEventListener("drop", ondrop);
+    document.body.addEventListener('paste', onpaste);
+  };
+</script>
+
+# Lazy Image
+
+Convert an image file into a [data URL] for use with an `<img>` tag.
+
+## Usage
+
+* drag & drop an image file into this window
+* or paste (ctrl-v) a screen capture from the clipboard
+* the data URL will be written below (and copied to your clipboard)
+
+<pre id='img1'>Paste or drop an image</pre>
+<img id='img2' />
+
+## Use in your page
+
+* &lt;script src="https://julians.page/js/image_converter.js" &gt;&lt/script&gt;
+
+## Use as a Bookmarklet
+
+* create a bookmark with name: `Encode Image` and address: `javascript:(function(){s=document.createElement('script');s.type='text/javascript';document.head.appendChild(s);s.src='bookmarklet.js';})();`
+* click the bookmark to activate the script in any web page
+* use as above (the result will appear in an alert box)
+
+[data URL]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
