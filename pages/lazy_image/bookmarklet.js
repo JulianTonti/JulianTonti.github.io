@@ -1,17 +1,47 @@
-function onpaste(event) {
-  let file = (event.clipboardData || window.clipboardData).files[0];
-  if (file && file.type.substr(0,6) == "image/") {
-    let reader = new FileReader();
-    reader.onloadend = function() {
-      let src = reader.result;
-      navigator.clipboard.writeText(`<img src="${src}" />`);
-      document.querySelector('#img1').innerHTML = `&lt;img src="${src}" /&gt;`;
+(function()
+{
+  function onover(event) {
+    event.preventDefault();
+  }
+  function onpaste(event) {
+    let file = (event.clipboardData || window.clipboardData).files[0];
+    convert_file(file);
+  }
+  function ondrop(event) {
+    event.preventDefault(); // prevents file being opened
+    let file = null;
+    if (event.dataTransfer.items) {
+      if (event.dataTransfer.items[0].kind === 'file') {
+        file = event.dataTransfer.items[0].getAsFile();
+      }
     }
-    reader.readAsDataURL(file);
+    else {
+      file = event.dataTransfer.files[0];
+    }
+    convert_file(file);
   }
-  else {
-    document.querySelector('#img1').innerHTML = "This only works with images. You pasted something else";
+  function convert_file(file) {
+    if (!file || file.type.substr(0,6) != "image/") {
+      navigator.clipboard.writeText("This only works with images. You pasted something else");
+    }
+    else {
+      let reader = new FileReader();
+      reader.onloadend = function() {
+        navigator.clipboard.writeText(`<img src="${reader.result}" />`);
+      }
+      reader.readAsDataURL(file);
+    }
   }
-}
-window.removeEventListener('paste', onpaste);
-window.addEventListener('paste', onpaste);
+  function init() {
+    if (document.readyState == 'loading') {
+      return setTimeout(init,100);
+    }
+    document.body.removeEventListener("dragover", onover);
+    document.body.removeEventListener("drop", ondrop);
+    document.body.removeEventListener('paste', onpaste);
+    document.body.addEventListener("dragover", onover);
+    document.body.addEventListener("drop", ondrop);
+    document.body.addEventListener('paste', onpaste);
+  }
+  init();
+})();

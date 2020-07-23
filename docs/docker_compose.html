@@ -1,0 +1,114 @@
+<script src='https://julians.page/md.js'></script>
+
+# Docker Compose
+
+Docker compose compiles a configuration file into an "app" consisting of any number of containers that can interact with one another.
+
+* `docker-compose.yaml`
+* `docker-compose.json`
+
+## Links
+* [Command line reference](https://docs.docker.com/compose/reference/)
+* [Compose-file reference](https://docs.docker.com/compose/compose-file/)
+* [General user guide](https://docs.docker.com/compose/)
+* [Current version and changelog](https://docs.docker.com/compose/compose-file/compose-versioning/)
+* [Django example](https://docs.docker.com/compose/django/)
+* [Other examples](https://docs.docker.com/compose/django/)
+
+## Common commands
+* All entries prefixed with `docker-compose`
+* Long form parameter names used (many also have a short form)
+
+| Command or Parameter | Description |
+| -------------------- | ----------- |
+| --file {name} | (-f) specify a docker-compose file (instead of default "docker-compose.yaml"). Also allows JSON. | 
+| --detach | (-d) runs all containers in the background |
+| up   | starts all containers in the docker-compose file |
+| down    | tear down the app, stop & remove containers and networks |
+| start {container} | start a specific container in the app |
+| stop {container}  | stop a specific container in the app |
+| pause   | pause all containers in the app |
+| unpause | unpause all containers in the app |
+| exec {container} {command} | run a command inside a named container |
+| build   | build containers for the app |
+| config  | check whether a YAML file is correctly structured |
+| logs    | show the logs for the app |
+| top     | see an overview of containers and their wrapped processes |
+
+
+## Example docker-compose file
+```
+version: "3.8"
+
+# then specify three different services (python, mysql, ubuntu)
+services:
+	python:
+		image: python:3
+		container_name: my_py
+		volumes:
+			- .:/src
+		command: python3 /src/run.py
+		restart: always
+	mysql:
+		image: mysql:latest
+		container_name: my_mysql
+		environment:
+			- MYSQL_ROOT_PASSWORD=abc123
+			- SOME_OTHER_VARIABLE=asd345
+		restart: always
+	ubuntu:
+		image: ubuntu:latest
+		container_name: my_ubuntu
+		command: echo "Hello from Ubuntu"
+		restart: always
+```
+
+
+
+
+### Docker Compose
+
+* a helper for building apps that consist of multiple containers (microservices)
+* app architecture is defined in a single YML file (or a JSON file)
+* services are automatically assigned to the same network, you don't need to specify a new network name
+* the "restart" option tells Docker to automatically restart the service if there's a crash
+* if services are built in the foreground, composer will print container output as they build
+* with each print, the docker name is prefixed before the message.
+* use the `-d` flag to build the app in the background (suppresses build messages)
+  
+Here is an example YAML file (docker-compose.yml)
+```
+# the first line is the Docker Compose version
+version: '3'
+
+# then specify three different services (python, mysql, ubuntu)
+services:
+	python:
+		image: python:3
+		container_name: my_py
+		volumes:
+			- .:/src
+		command: python3 /src/run.py
+		restart: always
+	mysql:
+		image: mysql:latest
+		container_name: my_mysql
+		environment:
+			- MYSQL_ROOT_PASSWORD=abc123
+			- SOME_OTHER_VARIABLE=asd345
+		restart: always
+	ubuntu:
+		image: ubuntu:latest
+		container_name: my_ubuntu
+		command: echo "Hello from Ubuntu"
+		restart: always
+```
+
+Build the app with Docker Compose. 
+```
+docker-compose up
+docker-compose up -d
+docker-compose ps
+docker-compose down
+```
+

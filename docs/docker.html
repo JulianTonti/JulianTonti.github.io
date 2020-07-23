@@ -1,0 +1,45 @@
+<script src="https://julians.page/md.js"></script>
+
+# Docker Cheatsheet
+
+## Volumes
+* [Overview](https://docs.docker.com/storage/volumes/)
+* [Using bind mounts](https://docs.docker.com/storage/bind-mounts/) : binds file/dir directly on local FS; host only; oldest method; can be shared.
+* [Using volumes](https://docs.docker.com/storage/volumes/) : preferred; binds any FS (eg, remote NFS); creates local directory under Docker's management; can be shared.
+* [Using tmpfs](https://docs.docker.com/storage/tmpfs/) : FS stored in host's RAM only; very fast; temporary; linux only; can't be shared.
+* use `--mount` instead of `--volume`
+
+
+## Managing volumes with Docker
+```
+docker volume create --name {name}
+docker volume create --name {name} --type local 
+docker volume rm {name}
+
+docker run --detach --volume {name}:/mnt/data
+```
+
+## --volume
+```
+{host_path}:{container_path}:{option1,option2,...}
+
+
+```
+
+## --mount
+```
+{key1=val1},{key2=val2,}{...}
+
+type=bind
+type=volume
+type=tmpfs
+
+
+
+
+```
+
+## Secrets
+* [faking it with secrets](https://randomtext.cc/use-file-secrets-in-docker-compose/)
+* [how to use an .env file](https://www.techrepublic.com/article/how-to-use-docker-env-file/)
+* [passing network secrets](https://pythonspeed.com/articles/docker-build-secrets/)
