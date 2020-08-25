@@ -1,5 +1,7 @@
 <script>
   let [key,val] = window.location.search.substr(1).split('=');
-  console.log(key,val);
-  document.write(`<link href="mailto:${val}" rel="me">`);
+  if (/^[\w.]{1,100}@[\w.]{1,100}$/.test(val)) {
+    console.log(key,val);
+    document.write(`<link href="mailto:${val}" rel="me">`);
+  }
 </script>
