@@ -1,3 +1,4 @@
+<head>
 <script>
   let [key,val] = window.location.search.substr(1).split('=');
   if (/^[\w.]{1,100}@[\w.]{1,100}$/.test(val)) {
@@ -5,3 +6,8 @@
     document.write(`<link href="mailto:${val}" rel="me">`);
   }
 </script>
+  <link href="mailto:me@example.com" rel="me">
+</head>
+<body>
+</body>
+</html>
