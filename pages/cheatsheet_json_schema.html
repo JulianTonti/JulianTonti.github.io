@@ -1,0 +1,456 @@
+<script src="https://julians.page/js/lazy_page.js"></script>
+
+# JSON Schema Cheat Sheet
+
+[NPM library](https://www.npmjs.com/package/ajv)
+
+<h2 id='example'>example</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum)
+
+```javascript
+{
+  "$comment" : "an example of a tuple (row). Field order matters"
+  "$id"      : "#book",
+  "type"     : "array",
+  "minItems" : 3,
+  "maxItems" : 3,
+  "items" : [
+    { 
+      "type"        : "string",
+      "title"       : "title",
+      "description" : "The cover title of the book"
+    },
+    {
+      "type"        : "string",
+      "title"       : "year",
+      "description" : "the year the book was published",
+      "format"      : "year"
+    },
+    {
+      "type"        : "string",
+      "title"       : "authors",
+      "description" : "the book's authors"
+    }
+  ]
+},
+{
+  "$comment" : "example of a table (array of tuples) that uses internal linking ($ref)",
+  "$id"      : "#books",
+  "type"     : "array",
+  "items"    : { "$ref" : "#book" },
+  "uniqueItems" : true
+},
+{
+  "$comment"   : "example of a strictly formed object",
+  "$id"        : "#person_id",
+  "type"       : "object",
+  "required"   : ["guid", "birthday"],
+  "properties" : {
+    "guid"     : { "type" : "integer" },
+    "birthday" : { "type" : "string", "format" : "date" }
+  },
+  "additionalProperties" : false
+},
+{
+  "$comment" : "object with most of the possible property data types",
+  "$id"      : "#person",
+  "type"     : "object",
+  "required" : ["id","name","email"],
+  "properties" : {
+    "id" : {
+      "$ref" : "#person_id"
+    },
+    "name" : {
+      "type"      : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "email" : {
+      "type"      : "string",
+      "format"    : "email",
+      "minLength" : 6,
+      "maxLength" : 255
+    },
+    "age" : {
+      "type"    : "integer",
+      "minimum" : 0,
+      "maximum" : 130,
+      "default" : 0
+    },
+    "class" : {
+      "enum" : ["warrior", "paladin", "cleric", "mage", "rogue", "thief", "bard"]
+    },
+    "height_m" : {
+      "type"       : "number",
+      "minimum"    : 0.00,
+      "maximum"    : 3.00,
+      "multipleOf" : 0.01,
+      "default"    : 0.00
+    },
+    "alive" : {
+      "type"    : "boolean",
+      "default" : "true"
+    },
+    "gender" : {
+      "type" : "string",
+      "enum" : ["male", "female", "other"]
+    },
+    "parents" : {
+      "type"     : "array",
+      "items"    : { "$ref" : "#person_id" },
+      "minItems" : 2,
+      "maxItems" : 2
+    },
+    "children" : {
+      "type"        : "array",
+      "items"       : { "$ref" : "#person_id" },
+      "uniqueItems" : true
+    },
+    "photo" : {
+      "type"             : "string",
+      "contentEncoding"  : "base64",
+      "contentMediaType" : "image/jpeg",
+      "maxLength"        : 1048575
+    },
+    "books_owned" : {
+      "$ref" : "#books",
+    },
+    "reserved" : {
+      "type" : "null"
+    }
+  }
+}
+```
+
+<h2 id='all'>all</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+Available to all schema elements. 
+```javascript
+{
+  "$schema"     : "http://json-schema.org/draft/2019-09/schema#",
+  "$id"         : "#unique_id",
+  "$ref"        : "#id or #path/to/fragment",
+  "$comment"    : "some programmer's comment",
+  "title"       : "title of the element",
+  "description" : "description of the element",
+  "example"    : ["example", "values", 1, 2.5, null, true],
+  "default"     : "fallback value if missing",
+  "enum"        : ["allowed", "values", 1, 2.5, null, true],
+  "const"       : "single value",
+  "allOf"       : [schema, schema, schema], // AND, all rules must be true
+  "anyOf"       : [schema, schema, schema], // OR, at least one rule must be true
+  "oneOf"       : [schema, schema, schema], // XOR, exactly one rule must be true
+  "not"         : schema, // the rule must not be true
+  "if"          : schema,
+  "then"        : schema,
+  "else"        : schema,
+}
+```
+* available to all schema nodes although not always meaningful
+* `$ref`is very useful as it allows code re-use and self referencing
+* `const` is essentially the same thing as `enum : [value]`
+* if a schema does not have a `type` value, `enum` can have mixed values
+* flexible conditional schemas can be built with `allOf|anyOf|oneOf|not|if|then|else`
+* unfortunately there is no `elif` but recursive `if|then` can be used instead 
+
+<h2 id='string'>string</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+String elements with extensions for supporting specific string types or string encoded binary data
+```js
+{
+  type      : "string",
+  minLength : 0,
+  maxLength : 255,
+  pattern   : "^regexp$",
+}
+
+// invoke custom mimetype parser where content has been string encoded
+{
+  contentEncoding  : "base64",
+  contentMediaType : "image/png"
+  contentMediaType : "image/jpeg"
+}
+{
+  contentMediaType : "text/html"
+}
+
+// invoke a validator plugin (note: implementation is optional)
+{
+  format : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
+  format : "time",          // RFC 3339, 20:20:39+00:00
+  format : "date",          // RFC 3339, 2018-11-13
+  format : "email",         // RFC 5322
+  format : "regex",         // ECMA 262 dialect
+  format : "idn-email",     // RFC 6531
+  format : "hostname",      // RFC 1034
+  format : "idn-hostname",  // RFC5890
+  format : "ipv4",          // RFC 2673
+  format : "ipv6",          // RFC 2373
+  format : "uri",           // RFC3986
+  format : "uri-reference", // RFC3986
+  format : "iri",           // RFC3987
+  format : "iri-reference", // RFC3987
+  format : "uri-template",  // RFC6570
+  format : "json-pointer",  // RFC6901
+  format : "relative-json-pointer",
+}
+```
+
+<h2 id='number'>number</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+The "integer" type is equivalent to "number" with `multipleOf : 1.0` 
+```js
+{
+  type    : "number",
+  minimum : 0.0,
+  maximum : 100.0,
+  exclusiveMinimum : 0.0,
+  exclusiveMaximum : 100.0,
+  multipleOf : 0.1
+}
+{
+  type    : "integer",
+  minimum : 0,
+  maximum : 100,
+  exclusiveMinimum : 0,
+  exclusiveMaximum : 255,
+  multipleOf : 1
+}
+```
+
+<h2 id='boolean'>boolean</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{ type:"boolean" }
+```
+
+<h2 id='null'>null</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{ type:"null" }
+```
+
+<h2 id='object'>object</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  type : "object",
+  properties : {
+    name1 : schema,
+    name2 : schema,
+    ...
+  },
+  patternProperties : {
+    "regex1" : schema,
+    "regex2" : schema,
+    ...
+  },
+  required : ["name1","name2"], // name1 and name2 are required
+  dependencies : {
+      name3 : ["name4", "name5"], // if name3 is present, name4 & 5 is required
+      name4 : ["name3", "name5"], // if name4 is present, name3 & 5 is required
+  },
+  minProperties : 0, 
+  maxProperties : 10,
+  propertyNames : {
+    pattern     : "^[A-Z][a-z]*$"
+  },
+  additionalProperties: true,   // extra properties automatically pass
+  additionalProperties: false,  // extra properties automatically fail
+  additionalProperties: schema, // extra properties must conform to the schema
+}
+```
+
+<h2 id='array'>array</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  type            : "array",
+  items           : schema, // list
+  items           : [schema,schema,...], // tuple
+  uniqueItems     : true,   // set type
+  contains        : schema, // at least one element matches
+  additionalItems : true,
+  additionalItems : false,
+  additionalItems : schema,
+  minItems        : 0,
+  maxItems        : 100,
+}
+```
+
+<h2 id='map'>map</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type" : "object",
+  "patternProperties" : {
+    "^regex1$" : { "type" : "string" },
+    "^regex2$" : { "type" : "number" }
+  }
+}
+```
+
+<h2 id='set'>set</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type" : "array",
+  "uniqueItems" : true
+}
+```
+
+<h2 id='array'>array</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type"  : "array",
+  "items" : { "type" : "string" }
+}
+```
+
+<h2 id='list'>list</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type" : "array",
+  "items" : { "anyOf" : [
+    { "type" : "string" },
+    { "type" : "number" },
+    { "type" : "boolean" },  
+  ]}
+}
+```
+
+<h2 id='tuple'>tuple</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type"  : "array",
+  "items" : [
+    { "type" : "string" },
+    { "type" : "number" },
+    { "type" : "boolean" },
+    { "type" : "string", "format": "email" }
+  ],
+  minItems : 4,
+  maxItems : 4
+}
+```
+
+<h2 id='binary'>binary</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  contentEncoding  : "base64",
+  contentMediaType : "image/png"
+  contentMediaType : "image/jpeg"
+}
+{
+  contentMediaType : "text/html"
+}
+```
+
+<h2 id='format'>format</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "type" : "string"
+  "format" : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
+  "format" : "time",          // RFC 3339, 20:20:39+00:00
+  "format" : "date",          // RFC 3339, 2018-11-13
+  "format" : "email",         // RFC 5322
+  "format" : "regex",         // ECMA 262 dialect
+  "format" : "idn-email",     // RFC 6531
+  "format" : "hostname",      // RFC 1034
+  "format" : "idn-hostname",  // RFC5890
+  "format" : "ipv4",          // RFC 2673
+  "format" : "ipv6",          // RFC 2373
+  "format" : "uri",           // RFC3986
+  "format" : "uri-reference", // RFC3986
+  "format" : "iri",           // RFC3987
+  "format" : "iri-reference", // RFC3987
+  "format" : "uri-template",  // RFC6570
+  "format" : "json-pointer",  // RFC6901
+  "format" : "relative-json-pointer",
+}
+```
+
+<h2 id='enum'>enum</h2>
+
+[example](#example) | [all](#all) | [string](#string) | [number](#number) | [boolean](#boolean) | 
+[null](#null) | [object](#object) | [array](#array) | [map](#map) | [set](#set) | [list](#list) | 
+[tuple](#tuple) | [binary](#binary) | [format](#format) | [enum](#enum) 
+
+```js
+{
+  "enum" : ["mixed", "values", 1.41, true, null]
+}
+{
+  "type" : "integer",
+  "enum" : [1,2,3,4]
+}
+```
+
+
+
+[GitHub Pages]: https://pages.github.com/
+[Jekyll]: https://jekyllrb.com/
