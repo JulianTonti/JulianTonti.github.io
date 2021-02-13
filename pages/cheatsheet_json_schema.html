@@ -1,14 +1,12 @@
 <script src="https://julians.page/js/lazy_page.js"></script>
 
 # JSON Schema Cheat Sheet
-
 [NPM library]
 
-<h2 id='example'>example</h2>
-
+## example
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```javascript
+```
 {
   "$comment" : "an example of a tuple (row). Field order matters"
   "$id"      : "#book",
@@ -123,12 +121,11 @@
 }
 ```
 
-<h2 id='all'>all</h2>
-
+## all
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
 Available to all schema elements. 
-```javascript
+```
 {
   "$schema"     : "http://json-schema.org/draft/2019-09/schema#",
   "$id"         : "#unique_id",
@@ -156,12 +153,11 @@ Available to all schema elements.
 * flexible conditional schemas can be built with `allOf|anyOf|oneOf|not|if|then|else`
 * unfortunately there is no `elif` but recursive `if|then` can be used instead 
 
-<h2 id='string'>string</h2>
-
+## string
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
 String elements with extensions for supporting specific string types or string encoded binary data
-```js
+```
 {
   type      : "string",
   minLength : 0,
@@ -201,12 +197,11 @@ String elements with extensions for supporting specific string types or string e
 }
 ```
 
-<h2 id='number'>number</h2>
-
+## number
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
 The "integer" type is equivalent to "number" with `multipleOf : 1.0` 
-```js
+```
 {
   type    : "number",
   minimum : 0.0,
@@ -225,27 +220,24 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='boolean'>boolean</h2>
-
+## boolean
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 { type:"boolean" }
 ```
 
-<h2 id='null'>null</h2>
-
+## null
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 { type:"null" }
 ```
 
-<h2 id='object'>object</h2>
-
+## object
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   type : "object",
   properties : {
@@ -274,11 +266,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='array'>array</h2>
-
+## array
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   type            : "array",
   items           : schema, // list
@@ -293,11 +284,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='map'>map</h2>
-
+## map
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type" : "object",
   "patternProperties" : {
@@ -307,33 +297,30 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='set'>set</h2>
-
+## set
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type" : "array",
   "uniqueItems" : true
 }
 ```
 
-<h2 id='array'>array</h2>
-
+## array
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type"  : "array",
   "items" : { "type" : "string" }
 }
 ```
 
-<h2 id='list'>list</h2>
-
+## list
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type" : "array",
   "items" : { "anyOf" : [
@@ -344,11 +331,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='tuple'>tuple</h2>
-
+## tuple
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type"  : "array",
   "items" : [
@@ -362,11 +348,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='binary'>binary</h2>
-
+## binary
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   contentEncoding  : "base64",
   contentMediaType : "image/png"
@@ -377,11 +362,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='format'>format</h2>
-
+## format
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "type" : "string"
   "format" : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
@@ -404,11 +388,10 @@ The "integer" type is equivalent to "number" with `multipleOf : 1.0`
 }
 ```
 
-<h2 id='enum'>enum</h2>
-
+## enum
 [example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
 
-```js
+```
 {
   "enum" : ["mixed", "values", 1.41, true, null]
 }
