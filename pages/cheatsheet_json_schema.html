@@ -1,10 +1,255 @@
 <script src="https://julians.page/js/lazy_page.js"></script>
 
 # JSON Schema Cheat Sheet
-[NPM library]
+[NPM library] - `npm i ajv`
+
+## general
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+Available to all schema elements though not always meaningful in certain contexts 
+```
+{
+  "$schema"     : "http://json-schema.org/draft/2019-09/schema#",
+  "$id"         : "#unique_id",
+  "$ref"        : "#id or #path/to/fragment",
+  "$comment"    : "some programmer's comment",
+  "title"       : "title of the element",
+  "description" : "description of the element",
+  "example"    : ["example", "values", 1, 2.5, null, true],
+  "default"     : "fallback value if missing",
+  "enum"        : ["allowed", "values", 1, 2.5, null, true],
+  "const"       : "single value",
+  "allOf"       : [schema, schema, schema], // AND, all rules must be true
+  "anyOf"       : [schema, schema, schema], // OR, at least one rule must be true
+  "oneOf"       : [schema, schema, schema], // XOR, exactly one rule must be true
+  "not"         : schema, // the rule must not be true
+  "if"          : schema,
+  "then"        : schema,
+  "else"        : schema,
+}
+```
+* `$ref`is very useful as it allows code re-use and self referencing
+* `const` is essentially the same thing as `enum : [value]`
+* if a schema does not have a `type` value, `enum` can have mixed values
+* flexible conditional schemas can be built with `allOf|anyOf|oneOf|not|if|then|else`
+* unfortunately there is no `elif` but recursive `if|then` can be used instead 
+
+## enum
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "enum" : ["mixed", "values", 1.41, true, null]
+}
+{
+  "type" : "integer",
+  "enum" : [1,2,3,4]
+}
+```
+
+## boolean
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{ type:"boolean" }
+```
+
+## null
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{ type:"null" }
+```
+
+## number
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+The "integer" type is equivalent to "number" with `multipleOf : 1.0` 
+```
+{
+  type    : "number",
+  minimum : 0.0,
+  maximum : 100.0,
+  exclusiveMinimum : 0.0,
+  exclusiveMaximum : 100.0,
+  multipleOf : 0.1
+}
+{
+  type    : "integer",
+  minimum : 0,
+  maximum : 100,
+  exclusiveMinimum : 0,
+  exclusiveMaximum : 255,
+  multipleOf : 1
+}
+```
+
+## string
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+Text based elements, see also [binary] and [format] for specialised string handlers
+```
+{
+  "type"      : "string",
+  "minLength" : 0,
+  "maxLength" : 255,
+  "pattern"   : "^regexp$",
+}
+```
+
+## format
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type" : "string"
+  "format" : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
+  "format" : "time",          // RFC 3339, 20:20:39+00:00
+  "format" : "date",          // RFC 3339, 2018-11-13
+  "format" : "email",         // RFC 5322
+  "format" : "regex",         // ECMA 262 dialect
+  "format" : "idn-email",     // RFC 6531
+  "format" : "hostname",      // RFC 1034
+  "format" : "idn-hostname",  // RFC5890
+  "format" : "ipv4",          // RFC 2673
+  "format" : "ipv6",          // RFC 2373
+  "format" : "uri",           // RFC3986
+  "format" : "uri-reference", // RFC3986
+  "format" : "iri",           // RFC3987
+  "format" : "iri-reference", // RFC3987
+  "format" : "uri-template",  // RFC6570
+  "format" : "json-pointer",  // RFC6901
+  "format" : "relative-json-pointer",
+}
+```
+
+## binary
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type" : "string"
+  "contentEncoding"  : "base64",
+  "contentMediaType" : "image/jpeg"
+}
+{
+  "type" : "string"
+  "contentMediaType" : "text/html"
+}
+```
+
+## object
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+Objects are flexible key:value stores. Keys can be defined by regex or static name. See also [map] 
+```
+{
+  type : "object",
+  properties : {
+    name1 : schema,
+    name2 : schema,
+    ...
+  },
+  patternProperties : {
+    "regex1" : schema,
+    "regex2" : schema,
+    ...
+  },
+  required : ["name1","name2"], // name1 and name2 are required
+  dependencies : {
+      name3 : ["name4", "name5"], // if name3 is present, name4 & 5 is required
+      name4 : ["name3", "name5"], // if name4 is present, name3 & 5 is required
+  },
+  minProperties : 0, 
+  maxProperties : 10,
+  propertyNames : {
+    pattern     : "^[A-Z][a-z]*$"
+  },
+  additionalProperties: true,   // extra properties automatically pass
+  additionalProperties: false,  // extra properties automatically fail
+  additionalProperties: schema, // extra properties must conform to the schema
+}
+```
+
+## map
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type" : "object",
+  "patternProperties" : {
+    "^regex1$" : { "type" : "string" },
+    "^regex2$" : { "type" : "number" }
+  }
+}
+```
+
+## array
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+Arrays are flexible value collections. Options allow it to be used as a monotype [array], mixed-type [list], [tuple] or [set].
+```
+{
+  "type"  : "array",
+  "items" : { "type" : "string" }
+}
+{
+  "type"            : "array",
+  "items"           : schema, // list
+  "items"           : [schema,schema,...], // tuple
+  "uniqueItems"     : true,   // set type
+  "contains"        : schema, // at least one element matches
+  "additionalItems" : true,
+  "additionalItems" : false,
+  "additionalItems" : schema,
+  "minItems"        : 0,
+  "maxItems"        : 100,
+}
+```
+
+## set
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type" : "array",
+  "uniqueItems" : true
+}
+```
+
+## list
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type" : "array",
+  "items" : { "anyOf" : [
+    { "type" : "string" },
+    { "type" : "number" },
+    { "type" : "boolean" },  
+  ]}
+}
+```
+
+## tuple
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
+
+```
+{
+  "type"  : "array",
+  "items" : [
+    { "type" : "string" },
+    { "type" : "number" },
+    { "type" : "boolean" },
+    { "type" : "string", "format": "email" }
+  ],
+  minItems : 4,
+  maxItems : 4
+}
+```
 
 ## example
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
+[general] | [enum] | [boolean] | [null] | [number] | [string] | [format] | [binary] | [object] | [map] | [array] | [list] | [set] | [tuple] | [example]
 
 ```
 {
@@ -121,299 +366,19 @@
 }
 ```
 
-## all
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-Available to all schema elements. 
-```
-{
-  "$schema"     : "http://json-schema.org/draft/2019-09/schema#",
-  "$id"         : "#unique_id",
-  "$ref"        : "#id or #path/to/fragment",
-  "$comment"    : "some programmer's comment",
-  "title"       : "title of the element",
-  "description" : "description of the element",
-  "example"    : ["example", "values", 1, 2.5, null, true],
-  "default"     : "fallback value if missing",
-  "enum"        : ["allowed", "values", 1, 2.5, null, true],
-  "const"       : "single value",
-  "allOf"       : [schema, schema, schema], // AND, all rules must be true
-  "anyOf"       : [schema, schema, schema], // OR, at least one rule must be true
-  "oneOf"       : [schema, schema, schema], // XOR, exactly one rule must be true
-  "not"         : schema, // the rule must not be true
-  "if"          : schema,
-  "then"        : schema,
-  "else"        : schema,
-}
-```
-* available to all schema nodes although not always meaningful
-* `$ref`is very useful as it allows code re-use and self referencing
-* `const` is essentially the same thing as `enum : [value]`
-* if a schema does not have a `type` value, `enum` can have mixed values
-* flexible conditional schemas can be built with `allOf|anyOf|oneOf|not|if|then|else`
-* unfortunately there is no `elif` but recursive `if|then` can be used instead 
-
-## string
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-String elements with extensions for supporting specific string types or string encoded binary data
-```
-{
-  type      : "string",
-  minLength : 0,
-  maxLength : 255,
-  pattern   : "^regexp$",
-}
-
-// invoke custom mimetype parser where content has been string encoded
-{
-  contentEncoding  : "base64",
-  contentMediaType : "image/png"
-  contentMediaType : "image/jpeg"
-}
-{
-  contentMediaType : "text/html"
-}
-
-// invoke a validator plugin (note: implementation is optional)
-{
-  format : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
-  format : "time",          // RFC 3339, 20:20:39+00:00
-  format : "date",          // RFC 3339, 2018-11-13
-  format : "email",         // RFC 5322
-  format : "regex",         // ECMA 262 dialect
-  format : "idn-email",     // RFC 6531
-  format : "hostname",      // RFC 1034
-  format : "idn-hostname",  // RFC5890
-  format : "ipv4",          // RFC 2673
-  format : "ipv6",          // RFC 2373
-  format : "uri",           // RFC3986
-  format : "uri-reference", // RFC3986
-  format : "iri",           // RFC3987
-  format : "iri-reference", // RFC3987
-  format : "uri-template",  // RFC6570
-  format : "json-pointer",  // RFC6901
-  format : "relative-json-pointer",
-}
-```
-
-## number
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-The "integer" type is equivalent to "number" with `multipleOf : 1.0` 
-```
-{
-  type    : "number",
-  minimum : 0.0,
-  maximum : 100.0,
-  exclusiveMinimum : 0.0,
-  exclusiveMaximum : 100.0,
-  multipleOf : 0.1
-}
-{
-  type    : "integer",
-  minimum : 0,
-  maximum : 100,
-  exclusiveMinimum : 0,
-  exclusiveMaximum : 255,
-  multipleOf : 1
-}
-```
-
-## boolean
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{ type:"boolean" }
-```
-
-## null
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{ type:"null" }
-```
-
-## object
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  type : "object",
-  properties : {
-    name1 : schema,
-    name2 : schema,
-    ...
-  },
-  patternProperties : {
-    "regex1" : schema,
-    "regex2" : schema,
-    ...
-  },
-  required : ["name1","name2"], // name1 and name2 are required
-  dependencies : {
-      name3 : ["name4", "name5"], // if name3 is present, name4 & 5 is required
-      name4 : ["name3", "name5"], // if name4 is present, name3 & 5 is required
-  },
-  minProperties : 0, 
-  maxProperties : 10,
-  propertyNames : {
-    pattern     : "^[A-Z][a-z]*$"
-  },
-  additionalProperties: true,   // extra properties automatically pass
-  additionalProperties: false,  // extra properties automatically fail
-  additionalProperties: schema, // extra properties must conform to the schema
-}
-```
-
-## array
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  type            : "array",
-  items           : schema, // list
-  items           : [schema,schema,...], // tuple
-  uniqueItems     : true,   // set type
-  contains        : schema, // at least one element matches
-  additionalItems : true,
-  additionalItems : false,
-  additionalItems : schema,
-  minItems        : 0,
-  maxItems        : 100,
-}
-```
-
-## map
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type" : "object",
-  "patternProperties" : {
-    "^regex1$" : { "type" : "string" },
-    "^regex2$" : { "type" : "number" }
-  }
-}
-```
-
-## set
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type" : "array",
-  "uniqueItems" : true
-}
-```
-
-## array
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type"  : "array",
-  "items" : { "type" : "string" }
-}
-```
-
-## list
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type" : "array",
-  "items" : { "anyOf" : [
-    { "type" : "string" },
-    { "type" : "number" },
-    { "type" : "boolean" },  
-  ]}
-}
-```
-
-## tuple
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type"  : "array",
-  "items" : [
-    { "type" : "string" },
-    { "type" : "number" },
-    { "type" : "boolean" },
-    { "type" : "string", "format": "email" }
-  ],
-  minItems : 4,
-  maxItems : 4
-}
-```
-
-## binary
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  contentEncoding  : "base64",
-  contentMediaType : "image/png"
-  contentMediaType : "image/jpeg"
-}
-{
-  contentMediaType : "text/html"
-}
-```
-
-## format
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "type" : "string"
-  "format" : "date-time",     // RFC 3339, 2018-11-13T20:20:39+00:00.
-  "format" : "time",          // RFC 3339, 20:20:39+00:00
-  "format" : "date",          // RFC 3339, 2018-11-13
-  "format" : "email",         // RFC 5322
-  "format" : "regex",         // ECMA 262 dialect
-  "format" : "idn-email",     // RFC 6531
-  "format" : "hostname",      // RFC 1034
-  "format" : "idn-hostname",  // RFC5890
-  "format" : "ipv4",          // RFC 2673
-  "format" : "ipv6",          // RFC 2373
-  "format" : "uri",           // RFC3986
-  "format" : "uri-reference", // RFC3986
-  "format" : "iri",           // RFC3987
-  "format" : "iri-reference", // RFC3987
-  "format" : "uri-template",  // RFC6570
-  "format" : "json-pointer",  // RFC6901
-  "format" : "relative-json-pointer",
-}
-```
-
-## enum
-[example] | [all] | [string] | [number] | [boolean] | [null] | [object] | [array] | [map] | [set] | [list] | [tuple] | [binary] | [format] | [enum]
-
-```
-{
-  "enum" : ["mixed", "values", 1.41, true, null]
-}
-{
-  "type" : "integer",
-  "enum" : [1,2,3,4]
-}
-```
-
 [NPM Library]: https://www.npmjs.com/package/ajv
-[example]: #example
-[all]: #all
+[general]: #general
+[enum]: #enum
 [string]: #string
+[format]: #format
+[binary]: #binary
 [number]: #number
 [boolean]: #boolean
 [null]: #null
 [object]: #object
-[array]: #array
 [map]: #map
-[set]: #set
+[array]: #array
 [list]: #list
+[set]: #set
 [tuple]: #tuple
-[binary]: #binary
-[format]: #format
-[enum]: #enum
+[example]: #example
