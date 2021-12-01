@@ -26,9 +26,8 @@ function require_one(src,cb) {
 }
 function require_many(srcs, cb) {
   sync(function* (unyield) {
-    for (let src of srcs) {
-      yield require_one(src, unyield);
-    }
+    for (let src of srcs) require_one(src, unyield);
+    for (let src of srcs) yield;
     cb();
   });
 }
