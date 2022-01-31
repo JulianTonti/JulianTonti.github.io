@@ -18,7 +18,6 @@ function require(src,cb) {
   else if (Array.isArray(src)) require_many(src,cb);
 }
 function require_one(src,cb) {
-  console.log('getting',src);
   let script = document.createElement('script');
   document.body.appendChild(script);
   script.onload = cb;
