@@ -1,0 +1,14 @@
+<script>
+function jump() {
+  let s = document.createElement('script');
+  s.setAttribute('cmd-redirect','https://www.google.com');
+  s.setAttribute('src','/index.js');
+  document.head.appendChild(s);
+}
+</script>
+<h1>Redirect example</h1>
+<p>Add this line to the top of your page to redirect users:</p>
+<pre>
+  &lt;script src="https://julians.page/index.js" cmd-redirect="https://www.google.com"&gt;&lt;/script&gt;
+</pre>
+<p>Click <a href='' onclick='jump()'>here</a> to insert the script and test it out</p>

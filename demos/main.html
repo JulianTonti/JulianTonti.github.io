@@ -1,0 +1,25 @@
+<script type='module' src='/index.js' cmd-markdown></script>
+
+# Client-side command tool
+
+The [index.js] script can be added to the top of a page to trigger certain actions.  
+Script attributes are used to invoke actions using `cmd-{action}="arguments"` syntax.
+
+```
+<script src='/index.js' cmd-markdown cmd-alert="converted to markdown"></script>
+```
+
+Supported actions:
+
+| Command | Params | Description |
+| --- | --- | --- |
+| cmd-display | none\|block | Sets the `body.style.display` value |
+| cmd-markdown | | converts the page content using the `marked.js` library |
+| cmd-alert | message | pops up an alert box with the specified message | 
+| cmd-redirect | address | redirect the user to the specified address |
+
+## See also:
+[marked.js]
+
+[index.js]: /index.js
+[marked.js]: https://github.com/markedjs/marked

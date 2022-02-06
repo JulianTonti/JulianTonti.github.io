@@ -1,21 +1,41 @@
-<script src="https://julians.page/lazy.js"></script>
+<script src="/index.js" cmd-markdown></script>
 
-# Using GitHub Pages without Jekyll
+# Julian's Page
 
-When you use [GitHub Pages] to host a website, [Jekyll] will be enabled by default and GitHub will run a build pipeline automatically when you push to the site's repo. That's fine, but maybe you want to control your own build process (or not use one at all).
+Computational biologist and a dad. Minimalism is usually good.
 
-## Create a site without Jekyll
-* using your GitHub username, create a repo called `<username>.github.io`
-* add an empty file to the repo root named `.nojekyll`. This will disable GitHub's automatic Jekyll processing.
-* add your site content then visit `<username>.github.io` to see it.
+## Tech notes for:
 
-## Using a custom domain
-* go to your custom domain provider and create a CNAME record that points at `<username>.github.io`.
-* add a text file named `CNAME` to the root of your site's repo. The file should contain your custom domain.
-* go to your site's repo at GitHub, then `Settings &rarr; GitHub Pages &rarr; Enforce HTTPS` and ensure that it is ticked.
-* visit your custom domain and it should forward to your GitHub site (it may not be immediate).
+* [docker](/notes/docker)
+* [docker_compose](/notes/docker_compose)
+* [javascript](/notes/javascript)
+* [json_schema](/notes/json_schema)
 
-[GitHub Pages]: https://pages.github.com/
-[Jekyll]: https://jekyllrb.com/
+## Demos:
 
+* [deathometer](/demos/deathometer)
+* [image_convert](/demos/image_convert)
+* [main](/demos/main)
+* [markdown](/demos/markdown)
+* [redirect](/demos/redirect)
 
+## How to:
+
+* [use WSL2 and Ubuntu on Windows](/guides/wsl_ubuntu/)
+* [host a website out of GitHub without Jekyll](/guides/github_pages/)
+
+## Tools:
+
+* [image_convert](/js/screencap.js)
+* [main](/js/main.js)
+* [markdown](/js/markdown.js)
+* [redirect](/js/redirect.js)
+* [require](/js/require.js)
+* [unyield](/js/unyield.js)
+
+<!--
+## Thoughts on:
+
+* [avoiding exceptions]
+* [the virus does CI/CD better than Pfizer]
+-->

@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>body{padding:10px} div{padding:10px}</style>
+<script type="module">
+import sync from '/js/unyield.js';
+import require from '/js/require.js';
+
+require([
+  '/external/moment.js',
+  '/external/uhtml.js',
+], render);
+
+let state = {
+  days_so_far : 0,
+  days_remaining : 0,
+  years_average : 82.9,
+  comment : '',
+  pct : 0.0
+};
+function render() {
+  uhtml.render(document.body, uhtml.html`
+  <h1>Deathometer</h1>
+  <div>
+    <input type='date' oninput=${update} />
+  </div>
+  ${state.pct == 0 ? '' : uhtml.html`
+  <div>You have been alive for ${state.days_so_far} days.</div>
+  <div>You have about ${state.days_remaining} days remaining</div>
+  <div class="w3-light-grey w3-round">
+    <div class="w3-container w3-round w3-blue" style="${`width:${state.pct}%`}">${state.pct}%</div>
+  </div>
+  <div>Magic 8-ball says that you're ${state.comment}</div>
+  `}`);
+}
+
+
+function update(){
+  let a = moment(this.value);
+  let b = moment();
+  state.days_so_far = b.diff(a,'days');
+
+  let e = a.add(state.years_average,'year');
+  state.days_remaining = e.diff(b, 'days');
+
+  state.pct = (100 * state.days_so_far / (state.days_so_far + state.days_remaining));
+  if (state.pct <=0 || state.pct > 150 || Number.isNaN(state.pct)) state.pct = 0;
+  state.pct = state.pct.toFixed(2);
+
+  if      (state.pct < 30)  state.comment = 'too young to care about using this';
+  else if (state.pct < 50)  state.comment = 'still in denial that you can keep up the pace';
+  else if (state.pct < 70)  state.comment = 'worrying that another GFC will wipe out your retirement savings';
+  else if (state.pct < 100) state.comment = 'only sticking around thanks to pills and surgeries';
+  else                      state.comment = 'in sudden death overtime!';
+  render();
+}
+</script>
