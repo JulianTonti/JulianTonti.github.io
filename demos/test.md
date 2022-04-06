@@ -1,0 +1,1 @@
+testing [[obsidian]] link style
