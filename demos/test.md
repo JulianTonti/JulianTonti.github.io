@@ -1,1 +1,1 @@
-testing [[obsidian]] link style
+testing [[readme.md]] link style
