@@ -1,1 +1,1 @@
-testing obsidian style
+testing [[test.md]] obsidian style
