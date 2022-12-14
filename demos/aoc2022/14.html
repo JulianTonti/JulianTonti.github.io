@@ -33,26 +33,6 @@
         desc: https://adventofcode.com/2022/day/14
         data: https://adventofcode.com/2022/day/14/input
       */
-      const AIR  = '.';
-      const ROCK = '#';
-      const SAND = 'O';
-      const SOURCE = '+';
-      const grid = {
-        width  : 0,
-        height : 0,
-        origin : { x:500, y:0 },
-        data   : [],
-        get    : (x,y) => (x < 0 || y < 0 || x >= grid.width || y >= grid.height) ? -1 : grid.data[y][x],
-        set    : (x,y,v) => grid.data[y][x] = v,
-      };
-      const cvs = document.getElementById('plot');
-      const ctx = cvs.getContext('2d');
-      const xf = 2;
-      const yf = 4;
-      let timer = 0;
-      const answer_box = document.getElementById('answer');
-      const button_play1 = document.getElementById('play1');
-      const button_play2 = document.getElementById('play2');
       const demo = `516,97 -> 516,94 -> 516,97 -> 518,97 -> 518,87 -> 518,97 -> 520,97 -> 520,92 -> 520,97 -> 522,97 -> 522,94 -> 522,97 -> 524,97 -> 524,95 -> 524,97 -> 526,97 -> 526,89 -> 526,97 -> 528,97 -> 528,89 -> 528,97 -> 530,97 -> 530,94 -> 530,97 -> 532,97 -> 532,91 -> 532,97
 495,26 -> 495,27 -> 507,27 -> 507,26
 516,97 -> 516,94 -> 516,97 -> 518,97 -> 518,87 -> 518,97 -> 520,97 -> 520,92 -> 520,97 -> 522,97 -> 522,94 -> 522,97 -> 524,97 -> 524,95 -> 524,97 -> 526,97 -> 526,89 -> 526,97 -> 528,97 -> 528,89 -> 528,97 -> 530,97 -> 530,94 -> 530,97 -> 532,97 -> 532,91 -> 532,97
@@ -195,6 +175,26 @@
 536,108 -> 541,108
 510,76 -> 510,78 -> 503,78 -> 503,84 -> 521,84 -> 521,78 -> 516,78 -> 516,76
 540,161 -> 545,161`;
+      const AIR  = '.';
+      const ROCK = '#';
+      const SAND = 'O';
+      const SOURCE = '+';
+      const grid = {
+        width  : 0,
+        height : 0,
+        origin : { x:500, y:0 },
+        data   : [],
+        get    : (x,y) => (x < 0 || y < 0 || x >= grid.width || y >= grid.height) ? -1 : grid.data[y][x],
+        set    : (x,y,v) => grid.data[y][x] = v,
+      };
+      const cvs = document.getElementById('plot');
+      const ctx = cvs.getContext('2d');
+      const xf = 2;
+      const yf = 4;
+      const answer_box = document.getElementById('answer');
+      const button_play1 = document.getElementById('play1');
+      const button_play2 = document.getElementById('play2');
+
       function init() {
         const traces = document.getElementById('data').value.trim().split("\n").map(line => line.trim().split(' -> ').map(s => s.split(',')).map(p => ({x:+p[0],y:+p[1]})));
         redim(traces);
@@ -355,6 +355,6 @@
       button_play1.onclick = play1;
       button_play2.onclick = play2;
       init();
-    </script>    
+    </script>
   </body>
 </html>
