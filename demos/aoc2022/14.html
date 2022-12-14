@@ -200,8 +200,6 @@
         redim(traces);
         build_map();
         add_rocks(traces);
-        plot_reset();
-        plot_rocks();
       }
       function plot_reset() {
         cvs.width = grid.width * xf;
@@ -312,6 +310,8 @@
         button_play1.disabled = true;
         button_play2.disabled = true;
         init();
+        plot_reset();
+        plot_rocks();
         let count = 0;
 
         function next() {
@@ -336,6 +336,9 @@
         grid.data.push(new Array(grid.width).fill(AIR));
         grid.data.push(new Array(grid.width).fill(ROCK));
         grid.height += 2;  
+        plot_reset();
+        plot_rocks();
+
         let count = 0;
         function next() {
           let res = drop_sand(grid.origin.x,grid.origin.y);
