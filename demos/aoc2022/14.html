@@ -19,8 +19,8 @@
   <body>
     <h1>Advent of Code 2022, Day 14</h1>
     <div>
-      <button onclick='play1()'>Solve task 1</button><span id='answer1'></span>
-      <button onclick='play2()'>Solve task 2</button><span id='answer2'></span>
+      <button id='play1'>Solve task 1</button><span id='answer1'></span>
+      <button id='play2'>Solve task 2</button><span id='answer2'></span>
     </div>
     <table><tr>
       <td><textarea id='data'></textarea></td>
@@ -49,7 +49,10 @@
       const ctx = cvs.getContext('2d');
       const xf = 2;
       const yf = 4;
+      let timer = 0;
       const answer_box = document.getElementById('answer');
+      const button_play1 = document.getElementById('play1');
+      const button_play2 = document.getElementById('play2');
       const demo = `516,97 -> 516,94 -> 516,97 -> 518,97 -> 518,87 -> 518,97 -> 520,97 -> 520,92 -> 520,97 -> 522,97 -> 522,94 -> 522,97 -> 524,97 -> 524,95 -> 524,97 -> 526,97 -> 526,89 -> 526,97 -> 528,97 -> 528,89 -> 528,97 -> 530,97 -> 530,94 -> 530,97 -> 532,97 -> 532,91 -> 532,97
 495,26 -> 495,27 -> 507,27 -> 507,26
 516,97 -> 516,94 -> 516,97 -> 518,97 -> 518,87 -> 518,97 -> 520,97 -> 520,92 -> 520,97 -> 522,97 -> 522,94 -> 522,97 -> 524,97 -> 524,95 -> 524,97 -> 526,97 -> 526,89 -> 526,97 -> 528,97 -> 528,89 -> 528,97 -> 530,97 -> 530,94 -> 530,97 -> 532,97 -> 532,91 -> 532,97
@@ -306,12 +309,19 @@
       }
       
       function play1() {
+        button_play1.disabled = true;
+        button_play2.disabled = true;
         init();
         let count = 0;
 
         function next() {
           let res = drop_sand(grid.origin.x,grid.origin.y);
-          if (res === null || res.y == grid.height-1) { answer_box.innerHTML = `${count}`; return; }
+          if (res === null || res.y == grid.height-1) { 
+            answer_box.innerHTML = `${count}`; 
+            button_play1.disabled = false;
+            button_play2.disabled = false;
+            return;
+          }
           if (++count % 10 == 0) answer_box.innerHTML = `${count}`
           plot_sand(res.x,res.y);
           requestAnimationFrame(next);
@@ -320,6 +330,8 @@
       }
   
       function play2() {
+        button_play1.disabled = true;
+        button_play2.disabled = true;
         init();
         grid.data.push(new Array(grid.width).fill(AIR));
         grid.data.push(new Array(grid.width).fill(ROCK));
@@ -327,7 +339,12 @@
         let count = 0;
         function next() {
           let res = drop_sand(grid.origin.x,grid.origin.y);
-          if (res === null) { answer_box.innerHTML = `${count}`; return; }
+          if (res === null) {
+            answer_box.innerHTML = `${count}`;
+            button_play1.disabled = false;
+            button_play2.disabled = false;
+            return;
+          }
           if (++count % 10 == 0) answer_box.innerHTML = `${count}`
           plot_sand(res.x,res.y);
           setTimeout(next,0);
@@ -335,6 +352,9 @@
         next();
       }
       document.getElementById('data').value = demo;
+      button_play1.onclick = play1;
+      button_play2.onclick = play2;
+      init();
     </script>    
   </body>
 </html>
