@@ -4,11 +4,15 @@
       body {
         font-family: Arial, Helvetica, sans-serif;
         text-align : center;
+        color: lightgray;
+        background-color: black;
       }
       #data {
         height : 60rem;
         width : 20rem;
         resize : true;
+        color:lightgray;
+        background-color:black;
       }
       #answer {
         font-size:xx-large;
@@ -197,6 +201,9 @@
       const button_play1 = document.getElementById('play1');
       const button_play2 = document.getElementById('play2');
       const button_abort = document.getElementById('abort');
+      const color_rock = 'red';
+      const color_sand = 'white';
+      const color_source = 'lightgreen';
 
       function init() {
         const traces = document.getElementById('data').value.trim().split("\n").map(line => line.trim().split(' -> ').map(s => s.split(',')).map(p => ({x:+p[0],y:+p[1]})));
@@ -208,30 +215,22 @@
         cvs.width = grid.width * xf;
         cvs.height = grid.height * yf;
         ctx = cvs.getContext('2d');
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'black';
         ctx.fillRect(0,0,cvs.width,cvs.height);
       }
       function plot_rocks() {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = color_rock;
         for (let x=0; x<grid.width; ++x) {
           for (let y=0; y<grid.height; ++y) {
-            if (grid.get(x,y) == ROCK) {
-              ctx.fillRect(x*2,y*4,2,4);
-            }
+            if (grid.get(x,y) == ROCK) plot_rock(x,y);
           }
         }
+        plot_source(grid.origin.x, grid.origin.y);
       }
       function plot_all() {
         for (let x=0; x<grid.width; ++x) {
           for (let y=0; y<grid.height; ++y) {
-            if (grid.get(x,y) == ROCK) {
-              ctx.fillStyle = 'red';
-              ctx.fillRect(x*2,y*4,2,4);
-            }
-            else if (grid.get(x,y) == SAND) {
-              ctx.fillStyle = 'black';
-              ctx.fillRect(x*2,y*4,2,4);
-            }
+            plot_point(x,y);
           }
         }
         button_play1.disabled = false;
@@ -239,8 +238,23 @@
         button_abort.disabled = true;
         abort = false;
       }
+      function plot_point(x,y) {
+        switch (grid.get(x,y)) {
+          case ROCK: return plot_rock(x,y);
+          case SAND: return plot_sand(x,y);
+          case SOURCE: return plot_source(x,y);
+        }
+      }
+      function plot_source(x,y) {
+        ctx.fillStyle = color_source;
+        ctx.fillRect(x*xf,y*yf,xf,yf);
+      }
+      function plot_rock(x,y) {
+        ctx.fillStyle = color_rock;
+        ctx.fillRect(x*xf,y*yf,xf,yf);
+      }
       function plot_sand(x,y) {
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = color_sand;
         ctx.fillRect(x*xf,y*yf,xf,yf);
       }
 
