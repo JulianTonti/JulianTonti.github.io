@@ -188,7 +188,7 @@
         set    : (x,y,v) => grid.data[y][x] = v,
       };
       const cvs = document.getElementById('plot');
-      const ctx = cvs.getContext('2d');
+      let ctx = cvs.getContext('2d');
       const xf = 2;
       const yf = 4;
       const answer_box = document.getElementById('answer');
@@ -204,6 +204,7 @@
       function plot_reset() {
         cvs.width = grid.width * xf;
         cvs.height = grid.height * yf;
+        ctx = cvs.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0,0,cvs.width,cvs.height);
       }
