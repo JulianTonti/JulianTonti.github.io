@@ -1,0 +1,16 @@
+<style>body { visibility:hidden }</style>
+<script src='/index.js' cmd-markdown></script>
+
+# JavaScript one liners
+
+Collected from the webs.
+
+```js
+let array_shuffle = a  => a.sort(()=>Math.random()-0.5);
+let array_unique  = a  => [...new Set(a)];
+let is_darkmode   = () => window.matchMedia?("(prefers-color-scheme: dark)").matches;
+let scroll_up     = el => el.scrollIntoView({behavior:'smooth', block:'start'});
+let scroll_down   = el => el.scrollIntoView({behavior:'smooth', block:'end'});
+let to_clipboard  = s  => navigator.clipboard?.writeText && navigator.clipboard.writeText(s);
+let color_random  = () => `#${Math.floor(Math.random() * 0xffffff).toString(16)}`
+```
