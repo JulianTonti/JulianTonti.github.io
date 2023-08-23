@@ -1,6 +1,6 @@
 const commands = {
   display  : args => document.body.style.display = args,
-  markdown : args => import("/js/markdown.js"),
+  markdown : args => import("https://julians.page/js/markdown.js"),
   alert    : args => alert(args),
   redirect : args => location.assign(args)
 };
