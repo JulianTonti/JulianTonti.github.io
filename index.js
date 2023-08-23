@@ -4,7 +4,7 @@ const commands = {
   alert    : args => alert(args),
   redirect : args => location.assign(args)
 };
-let s = document.querySelector('script[src="/index.js"]');
+let s = document.querySelector('script[src="https://julians.page/index.js"]');
 if (s) s.getAttributeNames().filter(n => n.startsWith('cmd-')).forEach(n => {
   let func = n.substring(4);
   let args = s.getAttribute(n);
