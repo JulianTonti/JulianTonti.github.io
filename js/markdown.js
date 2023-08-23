@@ -1,7 +1,7 @@
 function render() {
   if (document.readyState == 'loading') return document.onreadystatechange = render;
-  const src_css = '/external/marked.css'; //'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
-  const src_js  = '/external/marked.js'; //'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+  const src_css = 'https://julians.page/external/marked.css'; //'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
+  const src_js  = 'https://julians.page/external/marked.js'; //'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
   if (!document.querySelector(`link[href="${src_css}"]`)) {
     document.body.style.visibility = 'hidden';
     document.head.innerHTML += `
