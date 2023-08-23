@@ -1,3 +1,4 @@
+document.body.style.visibility = 'hidden';
 function render() {
   if (document.readyState == 'loading') return document.onreadystatechange = render;
   const src_css = 'https://julians.page/external/marked.css'; //'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
