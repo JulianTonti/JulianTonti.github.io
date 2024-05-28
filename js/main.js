@@ -1,12 +1,15 @@
-const commands = {
-  display  : args => document.body.style.display = args,
-  markdown : args => import("/js/markdown.js"),
-  alert    : args => alert(args),
-  redirect : args => location.assign(args)
-};
+import commands from './index.js';
+
 let s = document.querySelector('script[src="https://julians.page/js/main.js"]');
-if (s) s.getAttributeNames().filter(n => n.startsWith('cmd-')).forEach(n => {
-  let func = n.substring(4);
-  let args = s.getAttribute(n);
-  if (commands[func]) commands[func](args);
-})
+if (s !== null) {
+  for (let {name,value} of s.attributes) {
+    name = name.toLowerCase();
+    if (name.startsWith('cmd-')) {
+      let func = name.substring(4);
+      if (commands[func]) {
+        commands[func](value);
+      }
+    }
+  }
+}
+export default {};

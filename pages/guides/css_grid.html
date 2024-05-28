@@ -1,0 +1,49 @@
+<script src='https://julians.page/index.js' cmd-markdown></script>
+
+# CSS Grid Notes
+
+## Defining the Grid Container:
+- display: grid; or display: inline-grid;: Specifies whether an element is a grid container or inline grid container.
+- grid-template-rows: Defines the size of rows in the grid.
+- grid-template-columns: Defines the size of columns in the grid.
+- grid-template-areas: Names grid areas, making it easier to place items.
+- grid-auto-rows: Sets the size of automatically created rows.
+- grid-auto-columns: Sets the size of automatically created columns.
+- grid-auto-flow: Controls the direction items are placed in the grid.
+
+## Placing Grid Items:
+- grid-row-start, grid-row-end, grid-column-start, grid-column-end: Defines the placement of grid items.
+- grid-row, grid-column: Shorthand for placing items using line numbers or names.
+- grid-area: Specifies both row and column positions for an item.
+
+## Grid Line and Gap Properties:
+- grid-row-gap, grid-column-gap: Sets the size of gaps between rows and columns.
+- grid-gap: Shorthand for setting both row and column gaps.
+
+## Alignment and Justification:
+- justify-items: Aligns items within grid cells horizontally.
+- align-items: Aligns items within grid cells vertically.
+- justify-content: Aligns the entire grid within the container horizontally.
+- align-content: Aligns the entire grid within the container vertically.
+- place-self: Shorthand for aligning items both horizontally and vertically.
+- place-content: Shorthand for aligning the grid and its items.
+
+## Ordering and Overlapping:
+- order: Controls the order in which items are displayed.
+- z-index: Specifies the stacking order of grid items.
+
+## Sizing and Flexibility:
+- fr unit: Represents a fraction of available space within the grid.
+- minmax(): Defines a size range for grid tracks.
+- auto: Automatically sizes tracks based on content.
+- min-content, max-content: Sizes tracks to fit content.
+- fit-content(): Sizes tracks to fit content within a specified range.
+
+## Implicit Grids:
+- grid-auto-rows, grid-auto-columns: Defines the size of implicitly created rows and columns.
+- grid-auto-flow: Controls the direction of implicitly placed items.
+
+## Responsive Design:
+@media: Allows you to apply different grid configurations based on screen size or other conditions.
+
+These are some of the essential CSS Grid properties grouped by themes. CSS Grid provides a powerful way to create flexible and responsive layouts for web design, and mastering these properties will give you fine-grained control over your grid layouts.

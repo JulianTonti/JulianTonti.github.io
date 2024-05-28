@@ -11,3 +11,4 @@ function convert_clipboard_image(event) {
   }
 }
 document.body.addEventListener('paste', convert_clipboard_image);
+export default convert_clipboard_image;

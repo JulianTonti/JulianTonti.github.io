@@ -1,7 +1,8 @@
 <script src="https://julians.page/index.js" cmd-markdown></script>
 
 **Different ways to define functions**  
-<pre>
+
+```js
              function square(num)    { return num*num; }
 let square = function square(num)    { return num*num; }
 let square = function       (num)    { return num*num; }
@@ -9,10 +10,34 @@ let square =                (num) => { return num*num; }
 let square =                 num  => { return num*num; }
 let square =                (num) =>          num*num;
 let square =                 num  =>          num*num;
-</pre>
+```
+
 * braces {} and return can be omitted for lambda functions with only one line. 
 * parens ()            can be omitted for lambda functions with only one input.
 
 **Enable modules in NodeJS**
+
+```js
 update NodeJS >= v14
 add `{"type":"module"}` to package.json OR change file extension to `.mjs`
+```
+
+**Nested destructuring**
+
+It's always a good idea to define default values for input parameters. It helps a lot with type-hinting in the IDE. Here's how to do it for a nested object using destructuring. This has a couple of useful side-effects. If you pass in nothing (`undefined`), you still get default values. If you explicitly pass in `null` then you will get an error.
+
+```js
+function connect({
+  db:{
+    host = 'localhost',
+    port =  5432, 
+    credentials: { 
+      user     = 'admin', 
+      password = 'secret' 
+    } = {}
+  } = {}
+} = {}) {
+  // no matter what you exclude from the input, default values will always be set
+  console.log('values:',{host,port,user,password});
+}
+```

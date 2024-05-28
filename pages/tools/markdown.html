@@ -1,0 +1,32 @@
+# Markdown
+
+Browsers work hard to render bad HTML correctly. Let's exploit this ';..;'
+
+* create a blank file
+* add `<style>body{visibility:hidden;}</style>` to prevent the [FOUC][]
+* add `<script type='module' src='http://localhost:3000/js/markdown.js'></script>` to convert Markdown to HTML
+* add markdown, like this table and task list &darr;
+
+---
+
+| Left Aligned | Center Aligned | Right Aligned |
+| :-- | :-: | --: |
+| 1,1 | 1,2 | 1,3 |
+| 2,1 | 2,2 | 2,3 |
+| 3,1 | 3,2 | 3,3 |
+
+- [x] done
+- [x] completed
+- [ ] not done!
+
+<span style="color:orange">Regular <b style="color:blue">HTML</b> <sup>is</sup> fine <sub>as</sub> <i>well</i>.</span>
+<span>`< svg>` still works: <svg width="20" height="20"><circle cx="10" cy="10" r="8" stroke="green" stroke-width="1" fill="yellow" /></svg></span>
+<span> and so does `< math>`: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi> <mo>=</mo> <mfrac><mrow><mo>-</mo><mi>b</mi> <mo>&PlusMinus;</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></math></span>
+
+---
+
+`View Page Source` to see the mix of Markdown and HTML.
+
+Karen is not a hacker.
+
+[FOUC]: https://en.wikipedia.org/wiki/Flash_of_unstyled_content "Flash of unstyled content"
